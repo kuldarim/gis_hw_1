@@ -6,6 +6,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.esri.runtime.ArcGISRuntime;
 import com.esri.core.geometry.Point;
 import com.esri.core.map.Graphic;
@@ -52,14 +55,21 @@ public class Main {
     SimpleMarkerSymbol simpleMarker = new SimpleMarkerSymbol(Color.RED, 10, Style.CIRCLE);
      
     //create a point at x=-302557, y=7570663 (for a map using metres as units; this depends on the spatial reference)
-    Point pointGeometry = new Point(-302557, 7570663);
-     
-    //create a graphic with the geometry and marker symbol
-    Graphic pointGraphic = new Graphic(pointGeometry, simpleMarker);
+    //create list of points red from file
+    List<Point> pointGeometries = FileReader
+    	.getPointsFromFile()
+    	.stream()
+    	.map(p -> new Point(p.x, p.y))
+    	.collect(Collectors.toList());
+    //Point pointGeometry = new Point(-302557, 7570663);
+    pointGeometries
+    	.stream()
+    	.forEach(p -> myGraphicsLayer.addGraphic(new Graphic(p, simpleMarker)));
      
     //add the graphic to the graphics layer
-    myGraphicsLayer.addGraphic(pointGraphic);
-
+    pointGeometries
+		.stream()
+		.forEach(p -> myGraphicsLayer.addGraphic(new Graphic(p, simpleMarker)));
   }
 
   /**
@@ -72,9 +82,9 @@ public class Main {
       @Override
       public void run() {
         try {
-          /*Main application = new Main();
-          application.window.setVisible(true);*/
-        	FileReader.getPointsFromFile().stream().forEach( p -> System.out.println(p.y));
+          Main application = new Main();
+          application.window.setVisible(true);
+        	//FileReader.getPointsFromFile().stream().forEach( p -> System.out.println(p.y));
         } catch (Exception e) {
           e.printStackTrace();
         }
