@@ -56,6 +56,7 @@ public class Main {
      
     //create a point at x=-302557, y=7570663 (for a map using metres as units; this depends on the spatial reference)
     //create list of points red from file
+    System.out.println(FileReader.getPointsFromFile().size());
     List<Point> pointGeometries = FileReader
     	.getPointsFromFile()
     	.stream()
